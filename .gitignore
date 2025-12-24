@@ -1,0 +1,23 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Local environment variables (Crucial for security!)
+.env
+
+# Uploaded candidate resumes (Don't track actual user files)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
