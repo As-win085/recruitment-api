@@ -1,27 +1,49 @@
 const Candidate = require('../models/Candidate');
 
 exports.createCandidate = async (req, res) => {
-    const candidate = new Candidate({ ...req.body, recruiterId: req.user.id });
-    await candidate.save();
-    res.status(201).json(candidate);
+    try {
+        const candidate = new Candidate(req.body);
+        await candidate.save();
+        res.status(201).json({ success: true, data: candidate });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
 };
 
+// GET /api/candidates (With optional filtering)
 exports.getCandidates = async (req, res) => {
-    const { skill, minExp } = req.query;
-    let query = {};
-    if (skill) query.skills = { $in: [skill] };
-    if (minExp) query.experienceYears = { $gte: minExp };
-    
-    const candidates = await Candidate.find(query);
-    res.json(candidates);
+    try {
+        const { role } = req.query;
+        const query = role ? { role } : {};
+        const candidates = await Candidate.find(query).sort({ createdAt: -1 });
+        res.json(candidates);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
+// PUT /api/candidates/:id
+exports.updateCandidate = async (req, res) => {
+    try {
+        const candidate = await Candidate.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ success: true, candidate });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+// POST /api/candidates/:id/resume
 exports.uploadResume = async (req, res) => {
-    if (!req.file) return res.status(400).send('No file uploaded.');
-    const candidate = await Candidate.findByIdAndUpdate(
-        req.params.id, 
-        { resumePath: req.file.path }, 
-        { new: true }
-    );
-    res.json(candidate);
+    try {
+        if (!req.file) return res.status(400).json({ message: "Please upload a file" });
+        
+        const candidate = await Candidate.findByIdAndUpdate(
+            req.params.id,
+            { resumeUrl: req.file.path }, // Path from Multer
+            { new: true }
+        );
+        res.json({ message: "Resume uploaded successfully", candidate });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };

@@ -3,16 +3,16 @@ const mongoose = require('mongoose');
 const CandidateSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    skills: [String],
-    experienceYears: { type: Number, default: 0 },
-    resumePath: String,
-    score: { type: Number, default: 0 },
+    phone: String,
+    role: { type: String, required: true },
     status: { 
         type: String, 
         enum: ['Applied', 'Screened', 'Shortlisted', 'Rejected'], 
         default: 'Applied' 
     },
-    recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    score: { type: Number, default: 0 },
+    resumeUrl: String,
+    experience: Number // in years
 }, { timestamps: true });
 
 module.exports = mongoose.model('Candidate', CandidateSchema);
