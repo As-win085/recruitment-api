@@ -20,6 +20,7 @@ app.use('/uploads', express.static('uploads')); // Serve resume files statically
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/candidates', require('./routes/candidateRoutes'));
 app.use('/api/screening', require('./routes/screeningRoutes'));
+app.use('/api/reports', require('./routes/reports'));
 
 // 6. Root/Health Check Route
 app.get('/', (req, res) => {
