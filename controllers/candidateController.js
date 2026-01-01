@@ -12,15 +12,28 @@ exports.createCandidate = async (req, res) => {
 
 // GET /api/candidates (With optional filtering)
 exports.getCandidates = async (req, res) => {
-    try {
-        const { role } = req.query;
-        const query = role ? { role } : {};
-        const candidates = await Candidate.find(query).sort({ createdAt: -1 });
-        res.json(candidates);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+  try {
+    let query = {};
+
+    // Only filter if role is provided AND not empty
+    if (req.query.role && req.query.role.trim() !== "") {
+      query.role = req.query.role;
     }
+
+    const candidates = await Candidate
+      .find(query)
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: candidates.length,
+      data: candidates
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
 
 // PUT /api/candidates/:id
 exports.updateCandidate = async (req, res) => {
