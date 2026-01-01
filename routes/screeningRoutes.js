@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   scoreCandidate,
   getShortlistedCandidates
-} = require('../controllers/screeiningController');
+} = require('../controllers/screeningController');
 
 // POST /api/screening/:candidateId/score
 router.post('/:candidateId/score', scoreCandidate);
